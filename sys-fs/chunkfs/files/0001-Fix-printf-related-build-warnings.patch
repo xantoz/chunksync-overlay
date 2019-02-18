@@ -1,0 +1,49 @@
+From d22253e61102d9300bc2ee701381521777f45caa Mon Sep 17 00:00:00 2001
+From: Anton Kindestam <antonki@kth.se>
+Date: Sun, 17 Feb 2019 01:59:12 +0100
+Subject: [PATCH] Fix printf related build warnings
+
+---
+ chunkfs.c   | 5 +++--
+ unchunkfs.c | 2 +-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/chunkfs.c b/chunkfs.c
+index d09140a..f6f3ef7 100644
+--- a/chunkfs.c
++++ b/chunkfs.c
+@@ -28,6 +28,7 @@
+ #include <stdio.h>
+ #include <limits.h>
+ #include <stdint.h>
++#include <inttypes.h>
+ #include <sys/stat.h>
+ #include <fcntl.h>
+ #include <stdlib.h>
+@@ -119,8 +120,8 @@ static int chunkfs_readdir(const char *path,void *buf,fuse_fill_dir_t filler,off
+ 	filler(buf,".",NULL,0);
+ 	filler(buf,"..",NULL,0);
+ 	for(uint64_t x=0;x<256&&(uint64_t)st.chunk+x*chunks_per_entry<(uint64_t)image_chunks;x++){
+-		char nbuf[3];
+-		sprintf(nbuf,"%02llx",x);
++		char nbuf[4];
++		sprintf(nbuf,"%02"PRIx64,x);
+ 		filler(buf,nbuf,NULL,0);
+ 	}
+ 	return 0;
+diff --git a/unchunkfs.c b/unchunkfs.c
+index 9810001..306e440 100644
+--- a/unchunkfs.c
++++ b/unchunkfs.c
+@@ -64,7 +64,7 @@ static int resolve_path(const char *path,mode_t *mode){
+ }
+ 
+ static void gen_chunk_name(char *buf,off_t num){
+-	sprintf(buf+7,"%016llx",num);
++	sprintf(buf+7,"%016jx",(intmax_t)num);
+ 	for(int x=0;x<7;x++){
+ 		memmove(buf+x*3,buf+7+x*2,2);
+ 		buf[x*3+2]='/';
+-- 
+2.19.2
+
