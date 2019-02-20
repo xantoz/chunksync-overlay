@@ -23,7 +23,7 @@ src_prepare() {
 	# stop portage complaining about pre-stripped binaries
 	sed -i -e 's/LDFLAGS=-s/LDFLAGS=/' Makefile
 	# stop portage complaining about unexpected paths
-	sed -i -e 's|share/doc/chunkfs/|share/doc/${P}/|g' Makefile
+	sed -i -e 's|share/doc/chunkfs/|share/doc/${PF}/|g' Makefile
 
 	[[ -n ${PATCHES} ]] && eapply ${PATCHES}
 	eapply_user
