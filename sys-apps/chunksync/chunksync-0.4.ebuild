@@ -17,16 +17,20 @@ DEPEND="dev-libs/openssl"
 RDEPEND="${DEPEND}"
 
 src_prepare() {
-	sed -i -e '/install:/a\' -e '\tmkdir -p ${DESTDIR}${PREFIX}/bin/ ${DESTDIR}${PREFIX}/share/man/man1/' Makefile
+	sed -i -e '/install:/a\' -e '\tmkdir -p ${DESTDIR}${PREFIX}/bin/ ${DESTDIR}${PREFIX}/share/man/man1/' Makefile || die
 	# stop portage complaining about pre-compressed man pages
-	sed -i -e 's/| gzip > $@/> $@/' -e "s/${PN}.1.gz/${PN}.1/g" Makefile
+	sed -i -e 's/| gzip > $@/> $@/' -e "s/${PN}.1.gz/${PN}.1/g" Makefile || die
 	# stop portage complaining about pre-stripped binaries
-	sed -i -e 's/LDFLAGS=-s/LDFLAGS=/' Makefile
+	sed -i -e 's/LDFLAGS=-s/LDFLAGS=/' Makefile || die
 
 	[[ -n ${PATCHES} ]] && eapply ${PATCHES}
 	eapply_user
 }
 
+src_compile() {
+	emake CC="$(tc-getCC)" CFLAGS="${CFLAGS}"
+}
+
 src_install() {
-	emake DESTDIR="${D}" PREFIX=/usr CC="$(tc-getCC)" install
+	emake DESTDIR="${D}" PREFIX=/usr install
 }
