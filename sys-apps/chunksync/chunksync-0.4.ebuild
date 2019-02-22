@@ -1,5 +1,7 @@
 EAPI=7
 
+inherit toolchain-funcs
+
 DESCRIPTION="chunksync - space-efficient incremental (remote) backups of large files"
 HOMEPAGE="https://chunksync.florz.de/"
 SRC_URI="https://chunksync.florz.de/chunksync_0.4.tar.gz"
@@ -26,5 +28,5 @@ src_prepare() {
 }
 
 src_install() {
-	emake DESTDIR="${D}" PREFIX=/usr install
+	emake DESTDIR="${D}" PREFIX=/usr CC="$(tc-getCC)" install
 }

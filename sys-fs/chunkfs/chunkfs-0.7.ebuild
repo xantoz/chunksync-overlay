@@ -1,5 +1,7 @@
 EAPI=7
 
+inherit toolchain-funcs
+
 DESCRIPTION="chunkfs - mount arbitrary files via FUSE as a tree of chunk files"
 HOMEPAGE="https://chunkfs.florz.de/"
 SRC_URI="https://chunkfs.florz.de/chunkfs_0.7.tar.gz"
@@ -30,5 +32,5 @@ src_prepare() {
 }
 
 src_install() {
-	emake DESTDIR="${D}" PREFIX=/usr install
+	emake DESTDIR="${D}" PREFIX=/usr CC="$(tc-getCC)" install
 }
